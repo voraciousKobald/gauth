@@ -1,0 +1,21 @@
+#!/bin/bash
+token="$(<$HOME/gtoken/token)";
+repos="$(gh repo list | awk '{print $1}')";
+clear;
+PS3="Select a repo) "
+
+printf "\033[32mWorking directory: $PWD\033[0m\n\n"
+select mygit in ${repos};
+do
+	rc=${mygit}
+	case $rc in
+	'') printf "$0: Whoops, you messed up!\n\n" >&2; exit;;		# keeps the demons at bay
+	esac
+	url="https://$token@github.com/$rc"
+	break;
+done
+
+git remote set-url origin $url
+clear;
+printf "\033[32mToken successfully linked to local repo\033[0m\n\n"
+
