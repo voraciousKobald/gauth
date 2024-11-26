@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+UTIL=gauth
+DIR=$PWD
+read -p "THIS WILL ADD AN ALIAS TO ~/.bashrc & CREATE ~/gtoken , DO YOU CONSENT? (Y/N)       " consent
+case "$consent" in
+	y|Y ) echo "THANK YOU, YOU CAN ALWAYS REMOVE THE LINE ADDED IN ~/.bashrc IF COMPLICATIONS ARISE!";;
+	n|N ) echo "UNDERSTANDABLE, DONT FORGET TO DELETE THIS FILE FROM YOUR COMPUTER SO IT DOES NOT TAKE UP SPACE :)"; exit;;
+	* ) echo "I DONT UNDERSTAND"
+esac
+
+set +e
+
+aliasline="alias "$UTIL"='bash $DIR/$UTIL'"
+isinfile=$(grep "$aliasline" $HOME/.bashrc)
+
+if [ -z "$isinfile" ]; then
+    printf $aliasline >> $HOME/.bashrc
+    mkdir $HOME/gtoken
+    printf "replace this line with your token" >> $HOME/gtoken/token
+	printf "SETUP COMPLETE, ALIAS \"$UTIL\" HAS BEEN APPENDED TO ~/.bashrc, RUN \"exec bash\" OR RESTART TERMINAL"
+	exit 0
+else
+	echo "ALIAS ALREADY IN BASHRC, EXITING"
+	exit 1
+fi
+
+set -e
